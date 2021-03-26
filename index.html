@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sumulatorApp">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simulador</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<style>	
+		
+		.cuadrado {
+		    width: 100px; 
+		    height: 100px; 
+		    background: #428bca;
+		    float: left;
+		    /*margin: 3px;
+		    padding: 2px;*/
+		}
+		.cuadrado-3 {
+		     width: 100px; 
+		     height: 100px; 
+		     border: 3px solid #555;
+		     background: #428bca;
+		      float: left;
+		}
+		.left {
+			float: left;
+		}
+		.bgcolor {
+			color: black;
+		}
+		.margenes {
+			margin-top: 47px;
+			background: #428bca;
+			border:0px;
+		}
+		.number {
+			text-align: right;
+			font-size: 0.9em;
+			font-weight: bold;
+		}
+		</style>	
+</head>
+<body ng-cloak>
+	<div class="container">
+		<div class="col-md-12 col-lg-12 col-12">
+			<h1 class="text-center">Simulador</h1>
+			<div class="row">
+				<div class="col-md-6 offset-md-3" ng-controller="CellphoneController">
+					<table class="table table-sm " style="border: 2px #000000 solid;background: #E0E0E0">
+						<tbody>
+							<tr style="border: 2px #000000 solid;">
+								<td class="text-center" style="background: blue;" colspan="3">
+									SIMULADOR DE CREDITOS
+								</td>
+							</tr>
+							<tr>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+							</tr>
+							<tr>
+								<td>
+									<span>CONTADO</span>
+									<input numeric decimals="2" class="form-control form-control-sm number" style="background: #E3F2FD;color: #000000;border: 2px solid #000000;" ng-model="datum.data.contado" my-enter="datum.recalculaTodo(datum.data.contado)">
+								</td>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+								<td>
+									<span>ANTICIPO</span>
+									<input type="text" class="form-control form-control-sm number" style="background: #E3F2FD;color: #000000;border: 2px solid #000000;" ng-model="datum.data.anticipo">
+								</td>
+							</tr>
+							<tr>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+							</tr>
+							<tr>
+								<td>
+									<span>SALDO</span>
+									<input type="text" class="form-control form-control-sm number" style="background: #FFCC80;color: #000000;border: 2px solid #000000;" ng-model="datum.data.saldo" disabled>
+								</td>
+								<td><span>PAGOS</span>
+									<input numeric decimals="2" class="form-control form-control-sm number" style="background: #FF8A65;color: #000000;border: 2px solid #000000;"  ng-model="datum.data.pagos" disabled></td>
+								<td>
+									<span>INTERES</span>
+									<input type="text" class="form-control form-control-sm number"  ng-model="datum.data.interes" style="background: #FFF176;color: #000000;border: 2px solid #000000;" disabled>
+								</td>
+							</tr>
+							<tr>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+								<td><div style="width: 50px;height: 50px;"></div></td>
+							</tr>
+							<tr>
+								<td>
+									<span>SEMANAS</span>
+									<input type="text" class="form-control form-control-sm number"  ng-model="datum.data.cuotas" style="background: #E3F2FD;color: #000000;border: 2px solid #000000;">
+								</td>
+								<td>
+									<div style="width: 50px;height: 50px;">
+										
+									</div>
+								</td>
+								<td>
+									<span>CREDITO</span>
+									<input type="text" class="form-control form-control-sm number"  ng-model="datum.data.credito" style="background: #FFF176;color: #000000;border: 2px solid #000000;" disabled>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.min.js"></script>
+	<script src="assets/js/numeric-directive.js"></script>
+	
+	<script>
+		var app = angular.module('sumulatorApp',[]);
+		app.controller('CellphoneController',  ['$scope','Tools','$http', ($scope,Tools,$http) => {
+			$scope.datum = {
+				'data': {
+					'contado':parseFloat(250),
+					'anticipo':parseFloat(0),
+					'credito':parseFloat(0),
+					'saldo':parseFloat(0),
+					'cuotas': parseFloat(5),
+					'pagos': parseFloat(0),
+					'interes': parseFloat(0),
+					'porcentaje':parseFloat(0),
+					'Porcentajes':[
+						{'valor_fact':parseFloat(200),'porcentaje':0.70},
+						{'valor_fact':parseFloat(300),'porcentaje':1.667},
+						{'valor_fact':parseFloat(500),'porcentaje':1.24},
+					],
+					'Porcentajes2':[]
+				},
+				getValores: (data,saldo)=>{
+					var valor = 0;
+					
+					if(data.length>0){
+						var index = 0;
+						while(index < data.length && saldo >= parseFloat(data[index].valor_impuesto)){
+							index++;
+						}
+						//console.log(data[index].valor)
+						return parseFloat(data[index].valor);
+
+					}
+				},
+				get: ()=>{
+					$http.get(`sql/?op=getTable`)
+						.success(response=>{
+							if(response.success){
+								$scope.datum.data.Porcentajes2 = response.data;
+								$scope.datum.data.porcentaje = $scope.datum.getValores($scope.datum.data.Porcentajes2,$scope.datum.data.contado)
+							}	
+						})
+						.error(()=>console.log(response.msg))
+				},
+				recalculaTodo: valor => {
+					if(valor==0||valor==''||typeof valor === 'undefined'){
+			        	toastr["warning"]('Primero debe ingresar el valor de la factura','Acción NO Permitida');
+			        	return;
+			        }
+			        if($scope.datum.data.anticipo==''||$scope.datum.data.anticipo==0){
+			        	toastr["warning"]('Primero debe ingresar el valor de la factura','Acción NO Permitida');
+			        	return;
+			        }
+
+			        $scope.datum.data.saldo = parseFloat(parseFloat(valor-$scope.datum.data.anticipo).toFixed(2))
+			        //$scope.datum.data.porcentaje = $scope.datum.getValores($scope.datum.data.Porcentajes,valor)
+			        console.log($scope.datum.data.porcentaje)
+			        $scope.datum.data.pagos = parseFloat(parseFloat($scope.datum.data.saldo / $scope.datum.data.cuotas).toFixed(2));
+			        $scope.datum.data.interes = ($scope.datum.data.saldo * $scope.datum.data.porcentaje * $scope.datum.data.cuotas)/100;
+			        $scope.datum.data.credito = $scope.datum.data.saldo + $scope.datum.data.interes;
+				}
+			}
+			$scope.datum.get();
+			$scope.$watch('datum.data.anticipo', (n,o) => {
+	        	if(n===o) return;
+		        if($scope.datum.data.contado==''||$scope.datum.data.contado==0){
+		        	//toastr["warning"]('Primero debe ingresar el valor de la factura','Acción NO Permitida');
+		        	return;
+		        }
+
+		        $scope.datum.data.saldo = parseFloat(parseFloat($scope.datum.data.contado - n).toFixed(2));
+		        if($scope.datum.data.cuotas!==''||$scope.datum.data.cuotas>0){
+		        	$scope.datum.data.pagos = parseFloat($scope.datum.data.saldo / $scope.datum.data.cuotas).toFixed(2)
+		        	$scope.datum.data.interes = ($scope.datum.data.saldo * $scope.datum.data.porcentaje * $scope.datum.data.cuotas)/100;
+		        	$scope.datum.data.credito = $scope.datum.data.saldo + $scope.datum.data.interes;
+		        }else{
+		        	$scope.datum.data.pagos = 0;
+		        }
+		    }, true);
+		    $scope.$watch('datum.data.cuotas', (n,o) => {
+	        	if(n===o) return;
+		        if($scope.datum.data.contado==''||$scope.datum.data.contado==0){
+		        	toastr["warning"]('Primero debe ingresar el valor de la factura','Acción NO Permitida');
+		        	return;
+		        }
+		        if($scope.datum.data.anticipo==''||$scope.datum.data.anticipo==0){
+		        	toastr["warning"]('Primero debe ingresar el valor de la factura','Acción NO Permitida');
+		        	return;
+		        }
+		        $scope.datum.data.pagos = parseFloat($scope.datum.data.saldo / n).toFixed(2);
+		        $scope.datum.data.interes = ($scope.datum.data.saldo * $scope.datum.data.porcentaje * $scope.datum.data.cuotas)/100;
+		        $scope.datum.data.credito = $scope.datum.data.saldo + $scope.datum.data.interes;
+		        
+		    }, true);
+		    
+
+		}]);
+		app.service('Tools', ['$http', '$location', function($http, $location) {
+			this.Notificar = function(mensaje, cabecera, tipo, dimiss, position) {
+		        if (typeof tipo === 'undefined') tipo ='info'
+		        if (typeof dimiss === 'undefined') dimiss =true;
+		        if (typeof cabecera === 'undefined') cabecera ='';
+		        if (typeof position !== 'undefined') toastr.options.positionClass = position;
+		        toastr.options.closeButton = !dimiss;
+		        toastr.options.tapToDismiss = dimiss
+		        toastr.options.timeOut = dimiss ? '5000' : 0
+		        toastr.options.extendedTimeOut = 0
+		        toastr.options.preventDuplicates = true;
+		        toastr[tipo](mensaje, cabecera)
+		    }
+		}]);
+		app.directive('myEnter', function() {
+		    return function(scope, element, attrs) {
+		        element.bind("keydown keypress", function(event) {
+		            if (event.which === 13) {
+		                scope.$apply(function() {
+		                    scope.$eval(attrs.myEnter);
+		                });
+		                event.preventDefault();
+		            }
+		        });
+		    };
+		})
+	</script>
+</body>
+</html>
