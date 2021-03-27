@@ -68,7 +68,7 @@
 								<td><div style="width: 50px;height: 50px;"></div></td>
 								<td>
 									<span>ANTICIPO</span>
-									<input type="text" class="form-control form-control-sm number" style="background: #E3F2FD;color: #000000;border: 2px solid #000000;" ng-model="datum.data.anticipo">
+									<input type="text" class="form-control form-control-sm number" style="background: #E3F2FD;color: #000000;border: 2px solid #000000;" ng-model="datum.data.anticipo" my-enter="datum.recalculaTodo(datum.data.contado)">
 								</td>
 							</tr>
 							<tr>
@@ -96,7 +96,7 @@
 							<tr>
 								<td>
 									<span>SEMANAS</span>
-									<input type="text" class="form-control form-control-sm number"  ng-model="datum.data.cuotas" style="background: #E3F2FD;color: #000000;border: 2px solid #000000;">
+									<input type="text" class="form-control form-control-sm number"  ng-model="datum.data.cuotas" style="background: #E3F2FD;color: #000000;border: 2px solid #000000;" my-enter="datum.recalculaTodo(datum.data.contado)">
 								</td>
 								<td>
 									<div style="width: 50px;height: 50px;">
@@ -125,7 +125,7 @@
 		app.controller('CellphoneController',  ['$scope','Tools','$http', ($scope,Tools,$http) => {
 			$scope.datum = {
 				'data': {
-					'contado':parseFloat(250),
+					'contado':parseFloat(0),
 					'anticipo':parseFloat(0),
 					'credito':parseFloat(0),
 					'saldo':parseFloat(0),
@@ -145,7 +145,7 @@
 					
 					if(data.length>0){
 						var index = 0;
-						while(index < data.length && saldo >= parseFloat(data[index].valor_impuesto)){
+						while(index < data.length && saldo > parseFloat(data[index].valor_impuesto)){
 							index++;
 						}
 						//console.log(data[index].valor)
@@ -159,7 +159,8 @@
 							if(response.success){
 								$scope.datum.data.Porcentajes2 = response.data;
 								$scope.datum.data.porcentaje = $scope.datum.getValores($scope.datum.data.Porcentajes2,$scope.datum.data.contado)
-							}	
+							}
+							console.log($scope.datum.data.porcentaje)	
 						})
 						.error(()=>console.log(response.msg))
 				},
@@ -168,21 +169,19 @@
 			        	toastr["warning"]('Primero debe ingresar el valor de la factura','Acción NO Permitida');
 			        	return;
 			        }
-			        if($scope.datum.data.anticipo==''||$scope.datum.data.anticipo==0){
-			        	toastr["warning"]('Primero debe ingresar el valor de la factura','Acción NO Permitida');
-			        	return;
-			        }
-
-			        $scope.datum.data.saldo = parseFloat(parseFloat(valor-$scope.datum.data.anticipo).toFixed(2))
-			        //$scope.datum.data.porcentaje = $scope.datum.getValores($scope.datum.data.Porcentajes,valor)
-			        console.log($scope.datum.data.porcentaje)
-			        $scope.datum.data.pagos = parseFloat(parseFloat($scope.datum.data.saldo / $scope.datum.data.cuotas).toFixed(2));
-			        $scope.datum.data.interes = ($scope.datum.data.saldo * $scope.datum.data.porcentaje * $scope.datum.data.cuotas)/100;
-			        $scope.datum.data.credito = $scope.datum.data.saldo + $scope.datum.data.interes;
+			        
+			        $scope.datum.data.porcentaje = $scope.datum.getValores($scope.datum.data.Porcentajes2,$scope.datum.data.contado)
+			        $scope.datum.data.saldo = parseFloat(valor-$scope.datum.data.anticipo)
+			        let valor_pago = parseFloat($scope.datum.data.saldo / $scope.datum.data.cuotas)
+			        $scope.datum.data.pagos = parseFloat(parseFloat(($scope.datum.data.saldo*$scope.datum.data.porcentaje)/100)+valor_pago).toFixed(2);
+			        	
+			        $scope.datum.data.interes = parseFloat(($scope.datum.data.saldo * $scope.datum.data.porcentaje)/100) * parseInt($scope.datum.data.cuotas);
+			        $scope.datum.data.credito = parseFloat($scope.datum.data.saldo + $scope.datum.data.interes)+parseFloat($scope.datum.data.anticipo);
+					console.log($scope.datum.data.credito)
 				}
 			}
 			$scope.datum.get();
-			$scope.$watch('datum.data.anticipo', (n,o) => {
+			/*$scope.$watch('datum.data.anticipo', (n,o) => {
 	        	if(n===o) return;
 		        if($scope.datum.data.contado==''||$scope.datum.data.contado==0){
 		        	//toastr["warning"]('Primero debe ingresar el valor de la factura','Acción NO Permitida');
@@ -212,7 +211,7 @@
 		        $scope.datum.data.interes = ($scope.datum.data.saldo * $scope.datum.data.porcentaje * $scope.datum.data.cuotas)/100;
 		        $scope.datum.data.credito = $scope.datum.data.saldo + $scope.datum.data.interes;
 		        
-		    }, true);
+		    }, true);*/
 		    
 
 		}]);
